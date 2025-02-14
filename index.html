@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autoplay Video with Heart Loader</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+    }
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none; /* Hide video until it's ready */
+    }
+
+    /* Loader Container */
+    .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    /* Real Heart Shape */
+    .heart {
+      position: relative;
+      width: 100px;
+      height: 90px;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 150px;
+      background: red;
+      border-radius: 50px 50px 0 0;
+      top: 0;
+    }
+
+    .heart::before {
+      left: 50px;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+
+    .heart::after {
+      left: -50px;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+    }
+
+    /* Heart Pulsing Animation */
+    .heart {
+      animation: heartbeat 1s infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+    }
+
+    /* Loading Text */
+    .loading-text {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      animation: fade 1.5s infinite;
+    }
+
+    @keyframes fade {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* Hide loader smoothly */
+    .hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div class="loader-container" id="loader">
+    <div class="heart"></div>
+    <div class="loading-text">Loading...</div>
+  </div>
+
+  <!-- Video -->
+  <video id="myVideo" autoplay loop>
+    <source src="video.mp4" type="video/mp4">
+  </video>
+
+  <script>
+    window.onload = function() {
+      const video = document.getElementById('myVideo');
+      const loader = document.getElementById('loader');
+
+      video.volume = 1;
+
+      // Show video when it's fully loaded
+      video.oncanplaythrough = function() {
+        video.style.display = "block"; // Show video
+        loader.classList.add("hidden"); // Hide loader smoothly
+      };
+
+      // Try playing the video
+      video.play().catch(error => {
+        console.error("Autoplay blocked: ", error);
+      });
+    };
+  </script>
+
+</body>
+</html>
